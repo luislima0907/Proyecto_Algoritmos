@@ -9,12 +9,12 @@ from ventas.ventas import VentasWindow
 class MainWindow(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.Clientes_Widget = ClientesWindow()
-        self.Ventas_Widget = VentasWindow()
-        self.Administrador_Widget = AdministradorWindow()
-        self.ids.Scrn_Clientes.add_Widget(self.Clientes_Widget)
-        self.ids.Scrn_Ventas.add_Widget(self.Ventas_Widget)
-        self.ids.Scrn_Administrador.add_Widget(self.Administrador_Widget)
+        self.clientes_widget = ClientesWindow()
+        self.ventas_widget = VentasWindow()
+        self.administrador_widget = AdministradorWindow()
+        self.ids.Scrn_Clientes.add_widget(self.clientes_widget)
+        self.ids.Scrn_Ventas.add_widget(self.ventas_widget)
+        self.ids.Scrn_Administrador.add_widget(self.administrador_widget)
         
 class MainApp(App):
     def build(self):

@@ -113,16 +113,16 @@ if __name__=="__main__":
     # for producto in productos:
     #     print(producto)
 
-    # select_users = "SELECT * from usuarios"
-    # usuarios = QueriesSQLite.execute_read_query(connection, select_users)
-    # for usuario in usuarios:
-    #     print("type:", type(usuario), "usuario:",usuario)
+    seleccionar_clientes = "SELECT * from clientes"
+    clientes = QueriesSQLite.execute_read_query(connection, seleccionar_clientes)
+    for cliente in clientes:
+        print("type:", type(cliente), "cliente:",cliente)
 
-    producto_a_borrar=('888',)
-    borrar = """DELETE from productos where Codigo = ?"""
-    QueriesSQLite.execute_query(connection, borrar, producto_a_borrar)
+    # producto_a_borrar=('888',)
+    # borrar = """DELETE from productos where Codigo = ?"""
+    # QueriesSQLite.execute_query(connection, borrar, producto_a_borrar)
 
-    seleccionar_productos = "SELECT * from productos"
-    productos = QueriesSQLite.execute_read_query(connection, seleccionar_productos)
-    for producto in productos:
-        print(producto)
+    # seleccionar_productos = "SELECT * from productos"
+    # productos = QueriesSQLite.execute_read_query(connection, seleccionar_productos)
+    # for producto in productos:
+    #     print(producto)

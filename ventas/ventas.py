@@ -227,7 +227,7 @@ class NuevaCompraPopup(Popup):
 
 class VentasWindow(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(*kwargs)
+        super().__init__(**kwargs)
         self.Total = 0.0
         self.ids.RVS.modificar_producto = self.modificar_producto
         

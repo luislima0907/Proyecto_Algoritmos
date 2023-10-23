@@ -3,7 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 class AdministradorWindow(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(*kwargs)
+        super().__init__(**kwargs)
         
 class AdministradorApp(App):
     def build(self):
