@@ -25,15 +25,19 @@
         size_hint_x: .1
         color: (0,0,0,1)
     Label:
-        id: _Articulo
-        size_hint_x: .5
+        id: _Codigo_Cliente
+        size_hint_x: .3
+        color: (0,0,0,1)
+    Label:
+        id: _Codigo_Producto
+        size_hint_x: .3
         color: (0,0,0,1)
     Label:
         id: _Cantidad
-        size_hint_x: .1
+        size_hint_x: .10
         color: (0,0,0,1)
     Label:
-        id: _Precio_por_Articulo
+        id: _Precio_por_Producto
         size_hint_x: .15
         color: (0,0,0,1)
     Label:
@@ -52,13 +56,13 @@
         id: _Codigo
         size_hint_x: .25
     Label:
-        id: _Articulo
+        id: _Producto
         size_hint_x: .5
     Label:
         id: _Cantidad
         size_hint_x: .1
     Label:
-        id: _Precio
+        id: _Precio_por_Producto
         size_hint_x: .15
 
 <NuevaCompraPopup>:
@@ -87,39 +91,6 @@
         multiselect: False
         touch_multiselect: False
 
-<ProductoPorNombrePopup>:
-    size_hint: .5, .55
-    title: 'Productos'
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            size_hint_y: .8
-            orientation: 'vertical'
-            BoxLayout:
-                size_hint_y: .1
-                Label:
-                    text: 'Codigo'
-                    size_hint_x: .25
-                Label:
-                    text: 'Nombre'
-                    size_hint_x: .5
-                Label:
-                    text: 'Cantidad'
-                    size_hint_x: .1
-                Label:
-                    text: 'Precio'
-                    size_hint_x: .15
-            RV:
-                viewclass: 'SelectableBoxLayoutPopup'
-                id: RVS
-        BoxLayout:
-            size_hint_y: .2
-            Button:
-                text: 'Seleccionar'
-                on_release: root.seleccionar_articulo()
-            Button:
-                text: 'Salir'
-                on_release: root.dismiss()
 
 <CambiarCantidadPopup>:
     size_hint: .5, .5
@@ -132,6 +103,8 @@
                 id: Informacion_Nueva_Cantidad_1
             Label:
                 id: Informacion_Nueva_Cantidad_2
+            Label:
+                id: Informacion_Nueva_Cantidad_3
         Label:
             id: Notificacion_No_Valido
         TextInput:
@@ -233,15 +206,15 @@
         Label:
             size_hint_x: .2
         BotonOscuro:
-            id: Cliente_Boton
+            id: Inventarios_Y_Clientes_Boton
             size_hint_x: .15
-            text: 'Clientes'
-            on_release: root.admin()
+            text: 'Inventario y Clientes'
+            on_release: root.inventarios_y_clientes()
         BotonOscuro:
-            id: Salir_Boton
+            id: Inicio_Boton
             size_hint_x: .15
-            text: 'Salir'
-            on_release: root.signout()
+            text: 'Ir al Inicio'
+            on_release: root.inicio()
     BoxLayout:
         canvas.before:
             Color:
@@ -261,17 +234,17 @@
                 rows: 2
                 cols: 2
                 LabelOscuro:
-                    text: 'Buscar por Código'
+                    text: 'Buscar Venta por Código del Producto'
                 LabelOscuro:
-                    text: 'Buscar por Nombre'
+                    text: 'Buscar Venta por Código del Cliente'
                 TextInput:
-                    id: Buscar_Codigo
+                    id: Buscar_Codigo_Del_Producto
                     multiline: False
-                    on_text_validate: root.agregar_producto_codigo(self.text)
+                    on_text_validate: root.agregar_venta_codigo_producto(self.text)
                 TextInput:
-                    id: Buscar_Nombre
+                    id: Buscar_Codigo_Del_Cliente
                     multiline: False
-                    on_text_validate: root.agregar_producto_nombre(self.text)
+                    on_text_validate: root.agregar_venta_codigo_cliente(self.text)
             BoxLayout:
                 size_hint_y: .8
                 orientation: 'vertical'
@@ -282,13 +255,16 @@
                         text: '#'
                         size_hint_x: .1
                     LabelOscuro:
-                        text: 'Artículo'
-                        size_hint_x: .5
+                        text: 'Código del cliente'
+                        size_hint_x: .3
+                    LabelOscuro:
+                        text: 'Código del producto'
+                        size_hint_x: .3
                     LabelOscuro:
                         text: 'Cantidad'
                         size_hint_x: .1
                     LabelOscuro:
-                        text: 'Precio por Artículo'
+                        text: 'Precio unitario'
                         size_hint_x: .15
                     LabelOscuro:
                         text: 'Total'
@@ -300,11 +276,11 @@
                 size_hint_y: .1
                 spacing: .5
                 BotonOscuro:
-                    text: 'Borrar Artículo'
-                    on_release: root.eliminar_producto()
+                    text: 'Anular la Venta'
+                    on_release: root.anular_venta()
                 BotonOscuro:
-                    text: 'Cambiar Cantidad'
-                    on_release: root.modificar_producto()
+                    text: 'Cambiar Cantidad del Producto'
+                    on_release: root.modificar_cantidad_del_producto()
 
         BoxLayout:
             size_hint_x: .3
@@ -349,7 +325,7 @@
                     color: hex('#039B1E')
                 BotonOscuro:
                     size_hint_y: .25
-                    id: pagar
+                    id: Pagar
                     text: 'Pagar'
                     on_release: root.pagar()
                 BotonOscuro:

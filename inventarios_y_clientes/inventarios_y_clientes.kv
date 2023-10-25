@@ -1,0 +1,279 @@
+#:import hex kivy.utils.get_color_from_hex
+
+<BotonOscuro@Button>:
+    background_normal: ''
+    background_color: hex('#393939')
+
+<LabelOscuro@Label>:
+    canvas.before:
+        Color:
+            rgba: hex('#393939')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<InventariosYClientesRV>:
+    SelectableRecycleBoxLayout:
+        default_size: None, dp(26)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: False
+        touch_multiselect: False
+
+<SelectableProductoLabel>:
+    canvas.before:
+        Color:
+            rgba: hex('#C9F3EF') if self.selected else hex('#F0F0F0')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        id: _Hashtag
+        size_hint_x: .05
+        color: (0,0,0,1)
+    Label:
+        id: _Codigo
+        size_hint_x: .35
+        color: (0,0,0,1)
+    Label:
+        id: _Nombre
+        size_hint_x: .35
+        color: (0,0,0,1)
+    Label:
+        id: _Precio
+        size_hint_x: .125
+        color: (0,0,0,1)
+    Label:
+        id: _Cantidad
+        size_hint_x: .125
+        color: (0,0,0,1)
+    Label:
+        id: _Proveedor
+        size_hint_x: .50
+        color: (0,0,0,1)
+
+<SelectableClienteLabel>:
+    canvas.before:
+        Color:
+            rgba: hex('#C9F3EF') if self.selected else hex('#F0F0F0')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        id: _Hashtag
+        size_hint_x: .05
+        color: (0,0,0,1)
+    Label:
+        id: _Codigo
+        size_hint_x: .35
+        color: (0,0,0,1)
+    Label:
+        id: _Nombre
+        size_hint_x: .35
+        color: (0,0,0,1)
+    Label:
+        id: _Direccion
+        size_hint_x: .25
+        color: (0,0,0,1)
+    Label:
+        id: _Tipo
+        size_hint_x: .25
+        color: (0,0,0,1)
+
+<ProductoPopup>:
+    size_hint: .5, .5
+    auto_dismiss: False
+    title: ''
+    BoxLayout:
+	    orientation: 'vertical'
+	    padding: .05
+	    BoxLayout:
+	    	size_hint_y: .1
+		    Label:
+		    	id: Producto_Info_1
+	    Label:
+	    	id: No_Valido_Notificacion
+	    	size_hint_y: .1
+	    TextInput: 
+			size_hint_y: .2
+			id: Producto_Codigo
+			multiline: False
+			hint_text: 'Código'
+			write_tab: False
+		TextInput: 
+			id: Producto_Nombre
+			size_hint_y: .2
+			multiline: False
+			hint_text: 'Nombre'
+			write_tab: False
+		TextInput: 
+			id: Producto_Proveedor
+			size_hint_y: .2
+			multiline: False
+			hint_text: 'Proveedor'
+			write_tab: False
+		BoxLayout:
+			size_hint_y: .2
+			TextInput: 
+				id: Producto_Cantidad
+				multiline: False
+				hint_text: 'Cantidad'
+				write_tab: False
+			TextInput: 
+				id: Producto_Precio
+				multiline: False
+				hint_text: 'Precio'
+				write_tab: False
+		BoxLayout:
+			size_hint_y: .2
+		    Button:
+		    	text: 'Aceptar'
+		    	on_release: root.verificar(Producto_Codigo.text, Producto_Nombre.text, Producto_Proveedor.text, Producto_Cantidad.text, Producto_Precio.text)
+		    Button:
+		        text: 'Salir sin hacer cambios'
+		        on_press: root.dismiss()
+
+<VistaProductos>:
+    name: 'Productos'
+    BoxLayout:
+        BoxLayout:
+            padding: .5
+            orientation: 'vertical'
+            BoxLayout:
+                size_hint_y: .05
+                spacing: .5
+                LabelOscuro:
+                    text: '#'
+                    size_hint_x: .05
+                LabelOscuro:
+                    text: 'Código'
+                    size_hint_x: .35
+                LabelOscuro:
+                    text: 'Nombre'
+                    size_hint_x: .35
+                LabelOscuro:
+                    text: 'Precio'
+                    size_hint_x: .125
+                LabelOscuro:
+                    text: 'Cantidad'
+                    size_hint_x: .125
+                LabelOscuro:
+                    text: 'Proveedor'
+                    size_hint_x: .50
+            InventariosYClientesRV:
+                id: RV_Productos
+                size_hint_y: .50
+                viewclass: 'SelectableProductoLabel'
+        BoxLayout:
+            spacing: .5
+            size_hint_x: .2
+            orientation: 'vertical'
+            padding: .5
+            BotonOscuro:
+                text: 'Agregar Producto'
+                on_release: root.agregar_producto()
+            BotonOscuro:
+                text: 'Modificar Producto'
+                on_release: root.modificar_producto()
+            BotonOscuro:
+                text: 'Eliminar Producto'
+                on_release: root.eliminar_producto()
+
+<VistaClientes>:
+    name: 'Clientes'
+    BoxLayout:
+        BoxLayout:
+            padding: .5
+            orientation: 'vertical'
+            BoxLayout:
+                size_hint_y: .05
+                spacing: .5
+                LabelOscuro:
+                    text: '#'
+                    size_hint_x: .05
+                LabelOscuro:
+                    text: 'Código'
+                    size_hint_x: .35
+                LabelOscuro:
+                    text: 'Nombre'
+                    size_hint_x: .35
+                LabelOscuro:
+                    text: 'Dirección'
+                    size_hint_x: .25
+                LabelOscuro:
+                    text: 'Tipo'
+                    size_hint_x: .25
+            InventariosYClientesRV:
+                id: RV_Clientes
+                size_hint_y: .89
+                viewclass: 'SelectableClienteLabel'
+        BoxLayout:
+            spacing: .5
+            size_hint_x: .2
+            orientation: 'vertical'
+            padding: .5
+            BotonOscuro:
+                text: 'Agregar Cliente'
+                on_release: root.agregar_cliente()
+            BotonOscuro:
+                text: 'Modificar Cliente'
+                on_release: root.modificar_cliente()
+            BotonOscuro:
+                text: 'Eliminar Cliente'
+                on_release: root.eliminar_cliente()
+
+<InventariosYClientesWindow>:
+    id: main_win
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: hex('#159F9A')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: .1
+        BoxLayout:
+            padding: .1
+            spacing: .2
+            BotonOscuro:
+                id: Cambiar_Vista
+                size_hint_x: .1
+                text: 'Cambiar Vista'
+                on_release: root.cambiar_vista()
+            Label:
+                id: Mostrar_Cliente
+                size_hint_x: .1
+                color: hex('#000000')
+            Label:
+                size_hint_x: .1
+            Label:
+                id: Notificacion
+                size_hint_x: .1
+            BotonOscuro:
+                id: Boton_Venta
+                size_hint_x: .1
+                text: 'Ir a Ventas'
+                on_release: root.ventas()
+            BotonOscuro:
+                id: Boton_Inicio
+                size_hint_x: .1
+                text: 'Ir al inicio'
+                on_release: root.inicio()
+        
+        ScreenManager:
+            id: Vista_Manager
+            canvas.before:
+                Color:
+                    rgba: hex('#FFFFFF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            VistaProductos:
+                id: Vista_Productos
+            VistaClientes:
+                id: Vista_Clientes

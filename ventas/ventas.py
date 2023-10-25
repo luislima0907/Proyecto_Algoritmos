@@ -10,18 +10,37 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 from datetime import datetime, timedelta
+from kivy.lang import Builder
 
-inventario=[
-	{'Codigo': '111', 'Nombre': 'leche 1L', 'Precio': 20.0, 'Cantidad': 20},
-	{'Codigo': '222', 'Nombre': 'cereal 500g', 'Precio': 50.5, 'Cantidad': 15}, 
-	{'Codigo': '333', 'Nombre': 'yogurt 1L', 'Precio': 25.0, 'Cantidad': 10},
-	{'Codigo': '444', 'Nombre': 'helado 2L', 'Precio': 80.0, 'Cantidad': 20},
-	{'Codigo': '555', 'Nombre': 'alimento para perro 20kg', 'Precio': 750.0, 'Cantidad': 5},
-	{'Codigo': '666', 'Nombre': 'shampoo', 'Precio': 100.0, 'Cantidad': 25},
-	{'Codigo': '777', 'Nombre': 'papel higiénico 4 rollos', 'Precio': 35.5, 'Cantidad': 30},
-	{'Codigo': '888', 'Nombre': 'jabón para trastes', 'Precio': 65.0, 'Cantidad': 5},
-	{'Codigo': '999', 'Nombre': 'refresco 600ml', 'Precio': 15.0, 'Cantidad': 10}
+Builder.load_file('ventas/ventas.kv')
+
+from datetime import datetime, timedelta
+from sqlqueries import QueriesSQLite
+
+inventario = [
+    {'Codigo_del_cliente': 'G11', 'Codigo_del_producto': '111', 'Precio': 20.0, 'Cantidad': 20, 'Total': 400.00},
+    {'Codigo_del_cliente': 'D22', 'Codigo_del_producto': '222','Precio': 50.5, 'Cantidad': 15, 'Total': 757.50}, 
+    {'Codigo_del_cliente': 'S33', 'Codigo_del_producto': '333','Precio': 25.0, 'Cantidad': 10, 'Total': 250.00},
+    {'Codigo_del_cliente': 'F44', 'Codigo_del_producto': '444','Precio': 80.0, 'Cantidad': 20, 'Total': 1600.00},
+    {'Codigo_del_cliente': 'H55', 'Codigo_del_producto': '555','Precio': 750.0, 'Cantidad': 5, 'Total': 3750.00},
+    {'Codigo_del_cliente': 'T66', 'Codigo_del_producto': '666','Precio': 100.0, 'Cantidad': 25, 'Total': 2500.00},
+    {'Codigo_del_cliente': 'U77', 'Codigo_del_producto': '777','Precio': 35.5, 'Cantidad': 30, 'Total': 1065.00},
+    {'Codigo_del_cliente': 'W88', 'Codigo_del_producto': '888','Precio': 65.0, 'Cantidad': 5, 'Total': 325.00}
 ]
+
+#print(inventario_sql.get(0))
+
+# inventario=[
+# 	{'Nombre_del_cliente': 'Luis', 'Codigo_del_cliente': 'G10', 'Codigo_del_producto': '111', 'Nombre_del_producto': 'leche 1L', 'Precio': 20.0, 'Cantidad': 20},
+# 	{'Nombre_del_cliente': 'Marvin', 'Codigo_del_cliente': 'D30', 'Codigo_del_producto': '222', 'Nombre_del_producto': 'cereal 500g', 'Precio': 50.5, 'Cantidad': 15}, 
+# 	{'Nombre_del_cliente': 'Jose', 'Codigo_del_cliente': 'P90', 'Codigo_del_producto': '333', 'Nombre_del_producto': 'yogurt 1L', 'Precio': 25.0, 'Cantidad': 10},
+# 	{'Nombre_del_cliente': 'Danilo', 'Codigo_del_cliente': 'T80', 'Codigo_del_producto': '444', 'Nombre_del_producto': 'helado 2L', 'Precio': 80.0, 'Cantidad': 20},
+# 	{'Nombre_del_cliente': 'Jaminton', 'Codigo_del_cliente': 'Y70', 'Codigo_del_producto': '555', 'Nombre_del_producto': 'alimento para perro 20kg', 'Precio': 750.0, 'Cantidad': 5},
+# 	{'Nombre_del_cliente': 'Fabian', 'Codigo_del_cliente': 'U20', 'Codigo_del_producto': '666', 'Nombre_del_producto': 'shampoo', 'Precio': 100.0, 'Cantidad': 25},
+# 	{'Nombre_del_cliente': 'Marco', 'Codigo_del_cliente': 'R40', 'Codigo_del_producto': '777', 'Nombre_del_producto': 'papel higiénico 4 rollos', 'Precio': 35.5, 'Cantidad': 30},
+# 	{'Nombre_del_cliente': 'Yeferson', 'Codigo_del_cliente': 'H00', 'Codigo_del_producto': '888', 'Nombre_del_producto': 'jabón para trastes', 'Precio': 65.0, 'Cantidad': 5},
+# 	{'Nombre_del_cliente': 'Kevin', 'Codigo_del_cliente': 'G60', 'Codigo_del_producto': '999', 'Nombre_del_producto': 'refresco 600ml', 'Precio': 15.0, 'Cantidad': 10}
+# ]
 
 class SelectableRecycleBoxLayout(FocusBehavior, LayoutSelectionBehavior,
                                  RecycleBoxLayout):
@@ -38,9 +57,10 @@ class SelectableBoxLayout(RecycleDataViewBehavior, BoxLayout):
     def refresh_view_attrs(self, rv, index, data):
         self.index = index
         self.ids['_Hashtag'].text = str(1+index)
-        self.ids['_Articulo'].text = data['Nombre'].capitalize()
+        self.ids['_Codigo_Cliente'].text = data['Codigo_del_cliente']
+        self.ids['_Codigo_Producto'].text = data['Codigo_del_producto']
         self.ids['_Cantidad'].text = str(data['cantidad_carrito'])
-        self.ids['_Precio_por_Articulo'].text = str("{:.2f}".format(data['Precio']))
+        self.ids['_Precio_por_Producto'].text = str("{:.2f}".format(data['Precio']))
         self.ids['_Precio'].text = str("{:.2f}".format(data['precio_total']))
         return super(SelectableBoxLayout, self).refresh_view_attrs(
             rv, index, data)
@@ -69,10 +89,10 @@ class SelectableBoxLayoutPopup(RecycleDataViewBehavior, BoxLayout):
 
     def refresh_view_attrs(self, rv, index, data):
         self.index = index
-        self.ids['_Codigo'].text = data['Codigo']
-        self.ids['_Articulo'].text = data['Nombre'].capitalize()
+        self.ids['_Codigo'].text = data['Codigo_del_producto']
+        self.ids['_Producto'].text = data['Nombre_del_producto'].capitalize()
         self.ids['_Cantidad'].text = str(data['Cantidad'])
-        self.ids['_Precio'].text = str("{:.2f}".format(data['Precio']))
+        self.ids['_Precio_por_Producto'].text = str("{:.2f}".format(data['Precio']))
         return super(SelectableBoxLayoutPopup, self).refresh_view_attrs(
             rv, index, data)
 
@@ -96,14 +116,14 @@ class RV(RecycleView):
     def __init__(self, **kwargs):
         super(RV, self).__init__(**kwargs)
         self.data = []
-        self.modificar_producto = None
+        self.modificar_cantidad_del_producto = None
     
-    def agregar_articulo(self, articulo):
+    def agregar_venta(self, articulo):
         articulo['Seleccionado']=False
         indice = -1
         if self.data:
             for i in range(len(self.data)):
-                if articulo['Codigo'] == self.data[i]['Codigo']:
+                if articulo['Codigo_del_cliente'] == self.data[i]['Codigo_del_cliente']:
                     indice = i
             if indice >= 0:
                 self.data[indice]['cantidad_carrito']+=1
@@ -114,8 +134,8 @@ class RV(RecycleView):
         else:
             self.data.append(articulo)
     
-    def eliminar_articulo(self):
-        indice = self.articulo_seleccionado()
+    def anular_venta(self):
+        indice = self.venta_seleccionada()
         precio = 0
         if indice >= 0:
             self._layout_manager.deselect_node(self._layout_manager._last_selected_node)
@@ -124,14 +144,14 @@ class RV(RecycleView):
             self.refresh_from_data()
         return precio
     
-    def modificar_articulo(self):
-        indice = self.articulo_seleccionado()
+    def modificar_venta(self):
+        indice = self.venta_seleccionada()
         if indice >= 0:
-            popup = CambiarCantidadPopup(self.data[indice], self.actualizar_articulo)
+            popup = CambiarCantidadPopup(self.data[indice], self.actualizar_venta)
             popup.open()
     
-    def actualizar_articulo(self, valor):
-        indice = self.articulo_seleccionado()
+    def actualizar_venta(self, valor):
+        indice = self.venta_seleccionada()
         if indice >= 0:
             if valor == 0:
                 self.data.pop(indice)
@@ -143,57 +163,45 @@ class RV(RecycleView):
             nuevo_total = 0
             for data in self.data:
                 nuevo_total += data['precio_total']
-            self.modificar_producto(False, nuevo_total)
+            self.modificar_cantidad_del_producto(False, nuevo_total)
     
-    def articulo_seleccionado(self):
+    def venta_seleccionada(self):
         indice = -1
         for i in range(len(self.data)):
             if self.data[i]['Seleccionado']:
                 indice = i
                 break
         return indice
-
-class ProductoPorNombrePopup(Popup):
-    def __init__(self, input_nombre, agregar_producto_callback, **kwargs):
-        super(ProductoPorNombrePopup, self).__init__(**kwargs)
-        self.input_nombre = input_nombre
-        self.agregar_producto = agregar_producto_callback
-    
-    def mostrar_articulos(self):
-        self.open()
-        for nombre in inventario:
-            if nombre['Nombre'].lower().find(self.input_nombre) >= 0:
-                producto = {'Codigo': nombre['Codigo'], 'Nombre': nombre['Nombre'], 'Precio': nombre['Precio'], 'Cantidad': nombre['Cantidad']}
-                self.ids.RVS.agregar_articulo(producto)
-    
-    def seleccionar_articulo(self):
-        indice = self.ids.RVS.articulo_seleccionado()
+        
+    def seleccionar_venta(self):
+        indice = self.ids.RVS.venta_seleccionada()
         if indice >= 0:
-            _articulo = self.ids.RVS.data[indice]
-            articulo = {}
-            articulo['Codigo'] = _articulo['Codigo']
-            articulo['Nombre'] = _articulo['Nombre']
-            articulo['Precio'] = _articulo['Precio']
-            articulo['cantidad_carrito'] = 1
-            articulo['cantidad_inventario'] = _articulo['Cantidad']
-            articulo['precio_total'] = _articulo['Precio']
-            if callable(self.agregar_producto):
-                self.agregar_producto(articulo)
+            _venta = self.ids.RVS.data[indice]
+            venta = {}
+            venta['Codigo_del_cliente'] = _venta['Codigo_del_cliente']
+            venta['Codigo_del_producto'] = _venta['Codigo_del_producto']
+            venta['Cantidad'] = _venta['Cantidad']
+            venta['Precio'] = _venta['Precio']
+            venta['cantidad_carrito'] = 1
+            venta['precio_total'] = _venta['Precio']
+            if callable(self.agregar_venta):
+                self.agregar_venta(venta)
             self.dismiss()
 
 class CambiarCantidadPopup(Popup):
-    def __init__(self, data, actualizar_articulo_callback, **kwargs):
+    def __init__(self, data, actualizar_venta_callback, **kwargs):
         super(CambiarCantidadPopup, self).__init__(**kwargs)
         self.data = data
-        self.actualizar_articulo = actualizar_articulo_callback
-        self.ids.Informacion_Nueva_Cantidad_1.text = "Producto: " + self.data['Nombre'].capitalize()
-        self.ids.Informacion_Nueva_Cantidad_2.text = "Cantidad: " + str(self.data['cantidad_carrito'])
+        self.actualizar_venta = actualizar_venta_callback
+        self.ids.Informacion_Nueva_Cantidad_1.text = "Codigo_del_cliente: " + self.data['Codigo_del_cliente']
+        self.ids.Informacion_Nueva_Cantidad_2.text = "Codigo_del_producto: " + self.data['Codigo_del_producto']
+        self.ids.Informacion_Nueva_Cantidad_3.text = "Cantidad: " + str(self.data['cantidad_carrito'])
         
     def validar_input(self, texto_input):
         try:
             nueva_cantidad = int(texto_input)
             self.ids.Notificacion_No_Valido.text = ''
-            self.actualizar_articulo(nueva_cantidad)
+            self.actualizar_venta(nueva_cantidad)
             self.dismiss()
         except:
             self.ids.Notificacion_No_Valido.text = 'Cantidad no valida'
@@ -227,52 +235,67 @@ class NuevaCompraPopup(Popup):
 
 class VentasWindow(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(*kwargs)
         self.Total = 0.0
-        self.ids.RVS.modificar_producto = self.modificar_producto
+        self.ids.RVS.modificar_cantidad_del_producto = self.modificar_cantidad_del_producto
         
         self.Ahora = datetime.now()
         self.ids.Fecha.text = self.Ahora.strftime("%d/%m/%y")
         Clock.schedule_interval(self.actualizar_hora, 1)
         self.ids.Hora.text = self.Ahora.strftime("%H:%M:%S")
 
-        
     
-    def agregar_producto_codigo(self, codigo):
-        for producto in inventario:
-            if codigo==producto['Codigo']:
+    def agregar_venta_codigo_producto(self, codigo):
+        connection = QueriesSQLite.create_connection('Sistema_Transaccional_de_Ventas_DB.sqlite')
+        inventario_sql = QueriesSQLite.execute_read_query(connection, "SELECT * from ventas")
+        for producto in inventario_sql:
+            if codigo==producto[1]:
                 articulo = {}
-                articulo['Codigo'] = producto['Codigo']
-                articulo['Nombre'] = producto['Nombre']
-                articulo['Precio'] = producto['Precio']
+                articulo['Codigo_del_cliente'] = producto[0]
+                articulo['Codigo_del_producto'] = producto[1]
+                articulo['Precio'] = producto[2]
                 articulo['cantidad_carrito'] = 1
-                articulo['cantidad_inventario'] = producto['Cantidad']
-                articulo['precio_total'] = producto['Precio']
+                articulo['Cantidad'] = producto[3]
+                articulo['Total'] = producto[2]
                 self.Total+=articulo['Precio']
                 self.ids.Sub_Total.text = 'Q '+ "{:.2f}".format(self.Total)
-                self.ids.RVS.agregar_articulo(articulo)
-                self.agregar_producto(articulo)
-                self.ids.Buscar_Codigo.text = ''
+                self.ids.RVS.agregar_venta(articulo)
+                self.agregar_venta(articulo)
+                self.ids.Buscar_Codigo_Del_Cliente.text = ''
                 break
-    
-    def agregar_producto_nombre(self, nombre):
-        self.ids.Buscar_Nombre.text = ''
-        popup = ProductoPorNombrePopup(nombre, self.agregar_producto)
-        popup.mostrar_articulos()
+       
+    def agregar_venta_codigo_cliente(self, codigo):
+        connection = QueriesSQLite.create_connection('Sistema_Transaccional_de_Ventas_DB.sqlite')
+        inventario_sql = QueriesSQLite.execute_read_query(connection, "SELECT * from ventas")
+        for cliente in inventario_sql:
+            if codigo==cliente[0]:
+                articulo = {}
+                articulo['Codigo_del_cliente'] = cliente[0]
+                articulo['Codigo_del_producto'] = cliente[1]
+                articulo['Cantidad'] = cliente[3]
+                articulo['Precio'] = cliente[2]
+                articulo['cantidad_carrito'] = 1
+                articulo['Total'] = cliente[2]
+                self.Total+=articulo['Precio']
+                self.ids.Sub_Total.text = 'Q '+ "{:.2f}".format(self.Total)
+                self.ids.RVS.agregar_venta(articulo)
+                self.agregar_venta(articulo)
+                self.ids.Buscar_Codigo_Del_Cliente.text = ''
+                break
         
-    def agregar_producto(self, articulo):
+    def agregar_venta(self, articulo):
         self.Total+=articulo['Precio']
         self.ids.Sub_Total.text = 'Q '+ "{:.2f}".format(self.Total)
-        self.ids.RVS.agregar_articulo(articulo)    
+        self.ids.RVS.agregar_venta(articulo)    
     
-    def eliminar_producto(self):
-        menos_precio = self.ids.RVS.eliminar_articulo()
+    def anular_venta(self):
+        menos_precio = self.ids.RVS.anular_venta()
         self.Total-=menos_precio
         self.ids.Sub_Total.text = 'Q '+ "{:.2f}".format(self.Total)
         
-    def modificar_producto(self, cambio = True, nuevo_total = None):
+    def modificar_cantidad_del_producto(self, cambio = True, nuevo_total = None):
         if cambio:
-            self.ids.RVS.modificar_articulo()
+            self.ids.RVS.modificar_venta()
         else:
             self.Total = nuevo_total
             self.ids.Sub_Total.text = 'Q '+ "{:.2f}".format(self.Total)
@@ -292,18 +315,27 @@ class VentasWindow(BoxLayout):
         self.ids.Notificacion_Exito.text = 'Compra realizada con éxito'
         self.ids.Notificacion_Falla.text = ''
         self.ids.Total.text = 'Q ' + "{:.2f}".format(self.Total)
-        self.ids.Buscar_Codigo.disabled = True
-        self.ids.Buscar_Nombre.disabled = True
-        nueva_cantidad = []
-        for producto in self.ids.RVS.data:
-            cantidad = producto['cantidad_inventario'] - producto['cantidad_carrito']
-            if cantidad >= 0:
-                nueva_cantidad.append({'Codigo': producto['Codigo'], 'Cantidad': cantidad})
-            else:
-                nueva_cantidad.append({'Codigo': producto['Codigo'], 'Cantidad': 0})
-        for cantidad in nueva_cantidad:
-            resultado = next((producto for producto in inventario if producto['Codigo'] == cantidad['Codigo']), None)
-            resultado['Cantidad'] = cantidad['Cantidad']
+        self.ids.Buscar_Codigo_Del_Producto.disabled = True
+        self.ids.Buscar_Codigo_Del_Cliente.disabled = True
+        self.ids.Pagar.disabled = True
+        connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
+        actualizar = """
+        UPDATE
+            ventas
+        SET
+            Cantidad=?, Total=?
+        WHERE
+            Codigo_del_cliente=?
+        """
+        #nueva_cantidad = []
+        for venta in self.ids.RVS.data:
+            nueva_cantidad = 0
+            if venta['Cantidad']-venta['cantidad_carrito']>0:
+                nueva_cantidad = venta['Cantidad'] - venta['cantidad_carrito']
+                nuevo_total = nueva_cantidad * venta['Precio']
+            venta_tuple = (nueva_cantidad, nuevo_total, venta['Codigo_del_cliente'])
+            QueriesSQLite.execute_query(connection, actualizar, venta_tuple)
+
                         
     def nueva_compra(self, desde_popup = False):
         if desde_popup:
@@ -313,18 +345,27 @@ class VentasWindow(BoxLayout):
             self.ids.Total.text = '0.00'
             self.ids.Notificacion_Exito.text = ''
             self.ids.Notificacion_Falla.text = ''
-            self.ids.Buscar_Codigo.disabled = False
-            self.ids.Buscar_Nombre.disabled = False
+            self.ids.Buscar_Codigo_Del_Producto.disabled = False
+            self.ids.Buscar_Codigo_Del_Cliente.disabled = False
+            self.ids.Pagar.disabled = False
             self.ids.RVS.refresh_from_data()
         elif len(self.ids.RVS.data):
             popup = NuevaCompraPopup(self.nueva_compra)
             popup.open()
         
-    def admin(self):
-        print(f"Inventario: {inventario}")  
+    def inventarios_y_clientes(self):
+        self.parent.parent.current = 'Scrn_Inventarios_Y_Clientes'
+        # connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
+        # seleccionar_ventas = "SELECT * from ventas"
+        # ventas = QueriesSQLite.execute_read_query(connection, seleccionar_ventas)
+        # for venta in ventas:
+        #     print(venta)
 
-    def signout(self):
-        print("Signout presionado")  
+    def inicio(self):
+        if self.ids.RVS.data:
+            self.ids.Notificacion_Falla.text = 'Compra abierta'
+        else:   
+            self.parent.parent.current = 'Scrn_Inicio'        
 
 class VentasApp(App):
     def build(self):

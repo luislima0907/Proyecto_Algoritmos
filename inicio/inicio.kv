@@ -1,0 +1,59 @@
+#:import hex kivy.utils.get_color_from_hex
+
+<InicioWindow>:
+	orientation: 'vertical'
+	canvas.before:
+		Color:
+			rgba: hex('#159F9A')
+		Rectangle:
+			size: self.size
+			pos: self.pos
+	BoxLayout:
+		size_hint_y: .05
+	BoxLayout:
+		canvas.before:
+			Color:
+				rgba: hex('#F2F2F2')
+			Rectangle:
+				size: self.size
+				pos: self.pos
+		size_hint_y: .9
+		Label:
+			size_hint_x: .3
+		BoxLayout:
+			size_hint_x: .4
+			orientation: 'vertical'
+			Label: 
+				size_hint_y: .15
+				text: 'Bienvenido'
+				color: (0,0,0,1)
+			Label:
+				id: Inicio_Notificacion
+				size_hint_y: .15
+				color: (1, .2, .2, 1)
+			TextInput:
+				id: Codigo
+				size_hint_y: .1
+				hint_text: 'Ingrese el codigo del cliente'
+				multiline: False
+				write_tab: False
+				on_text_validate: root.verificar_cliente(self.text, Nombre.text)
+			TextInput:
+				id: Nombre
+				size_hint_y: .1
+				hint_text: 'Nombre del cliente'
+				multiline: False
+				write_tab: False
+				on_text_validate: root.verificar_cliente(Codigo.text, self.text)
+			Button:
+				size_hint_y: .1
+				background_normal: ''
+				background_color: hex('#393939')
+				text: 'Ingresar'
+				on_release: root.verificar_cliente(Codigo.text, Nombre.text)
+			Label:
+				size_hint_y: .4
+		Label:
+			size_hint_x: .3
+	BoxLayout:
+		size_hint_y: .05
