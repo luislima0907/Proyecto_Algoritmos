@@ -82,6 +82,70 @@
         size_hint_x: .25
         color: (0,0,0,1)
 
+<SelectableVentaLabel>:
+	canvas.before:
+        Color:
+            rgba: hex('#C9F3EF') if self.selected else hex('#F0F0F0')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        id: _hashtag
+        size_hint_x: .05
+        color: (0,0,0,1)
+    Label:
+        id: _username
+        size_hint_x: .2
+        color: (0,0,0,1)
+    Label:
+        id: _cantidad
+        size_hint_x: .2
+        color: (0,0,0,1)
+    Label:
+        id: _total
+        size_hint_x: .15
+        color: (0,0,0,1)
+    Label:
+        id: _time
+        size_hint_x: .2
+        color: (0,0,0,1)
+    Label:
+        id: _date
+        size_hint_x: .2
+        color: (0,0,0,1)
+
+<ItemVentaLabel>:
+    canvas.before:
+        Color:
+            rgba: hex('#F0F0F0')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        id: _hashtag
+        size_hint_x: .05
+        color: (0,0,0,1)
+    Label:
+        id: _codigo
+        size_hint_x: .25
+        color: (0,0,0,1)
+    Label:
+        id: _articulo
+        size_hint_x: .25
+        color: (0,0,0,1)
+    Label:
+        id: _cantidad
+        size_hint_x: .15
+        color: (0,0,0,1)
+    Label:
+        id: _precio_por_articulo
+        size_hint_x: .15
+        color: (0,0,0,1)
+    Label:
+        id: _total
+        size_hint_x: .15
+        color: (0,0,0,1)
+
 <ProductoPopup>:
     size_hint: .5, .5
     auto_dismiss: False
@@ -131,6 +195,52 @@
 		    Button:
 		    	text: 'Aceptar'
 		    	on_release: root.verificar(Producto_Codigo.text, Producto_Nombre.text, Producto_Proveedor.text, Producto_Cantidad.text, Producto_Precio.text)
+		    Button:
+		        text: 'Salir sin hacer cambios'
+		        on_press: root.dismiss()
+
+<ClientePopup>:
+    size_hint: .5, .5
+    auto_dismiss: False
+    title: ''
+    BoxLayout:
+	    orientation: 'vertical'
+	    padding: .05
+	    Label:
+	    	size_hint_y: .1
+	    	id: Cliente_Info_1
+	    Label:
+	    	id: No_Valido_Notificacion_2
+	    	size_hint_y: .1
+	    TextInput: 
+			size_hint_y: .2
+			id: Cliente_Codigo
+			multiline: False
+			hint_text: 'Codigo'
+			write_tab: False
+		TextInput: 
+			id: Cliente_Nombre
+			size_hint_y: .2
+			multiline: False
+			hint_text: 'Nombre'
+			write_tab: False
+		TextInput: 
+			id: Cliente_Direccion
+			size_hint_y: .2
+			multiline: False
+			hint_text: 'Direccion'
+			write_tab: False
+		TextInput: 
+			id: Cliente_Tipo
+			size_hint_y: .2
+			multiline: False
+			hint_text: 'Tipo'
+			write_tab: False
+		BoxLayout:
+			size_hint_y: .2
+		    Button:
+		    	text: 'Aceptar'
+		    	on_release: root.verificar(Cliente_Codigo.text, Cliente_Nombre.text, Cliente_Direccion.text, Cliente_Tipo.text)
 		    Button:
 		        text: 'Salir sin hacer cambios'
 		        on_press: root.dismiss()
@@ -224,6 +334,162 @@
                 text: 'Eliminar Cliente'
                 on_release: root.eliminar_cliente()
 
+<InfoVentaPopup>:
+    size_hint: .5, .5
+    title: 'Información de venta seleccionada:'
+    BoxLayout:
+    	orientation: 'vertical'
+	    padding: .05
+	    BoxLayout:
+    		size_hint_y: .1
+	    	LabelOscuro:
+	    		text: '#'
+	    		size_hint_x: .05
+	    	LabelOscuro:
+	    		text: 'Código'
+	    		size_hint_x: .25
+	    	LabelOscuro:
+	    		text: 'Nombre'
+	    		size_hint_x: .25
+	    	LabelOscuro:
+	    		text: 'Cantidad'
+	    		size_hint_x: .15
+	    	LabelOscuro:
+	    		text: '$ /Artículo'
+	    		size_hint_x: .15
+	    	LabelOscuro:
+	    		text: 'Total'
+	    		size_hint_x: .15
+	    InventariosYClientesRV:
+			id: info_rv
+		    viewclass: 'ItemVentaLabel'
+		BoxLayout:
+    		size_hint_y: .1
+			LabelOscuro:
+				text: 'Artículo vendidos:'
+	    		size_hint_x: .25
+			LabelOscuro:
+				id: total_items
+	    		size_hint_x: .25
+			LabelOscuro:
+				text: 'Total vendido: '
+	    		size_hint_x: .25
+			LabelOscuro:
+				id: total_dinero
+	    		size_hint_x: .25
+
+<VistaVentas>:
+	name: 'Ventas'
+	BoxLayout:
+		orientation: 'vertical'
+		BoxLayout:
+			size_hint_y: .1
+			spacing: .5
+			padding: .5
+			LabelOscuro:
+				id: notificacion
+				text: 'Datos de Ventas'
+				size_hint_x: .4
+			LabelOscuro:
+				text: 'Viendo: '
+				size_hint_x: .1
+			LabelOscuro:
+				id: Fecha
+				size_hint_x: .2
+				text: 'Hoy'
+			LabelOscuro:
+				text: 'Total: '
+				size_hint_x: .1
+			LabelOscuro:
+				id: final_suma
+				size_hint_x: .2
+		BoxLayout:
+			size_hint_y: .1
+			spacing: .5
+			padding: .5
+			LabelOscuro:
+				text: '#'
+				size_hint_x: .05
+			LabelOscuro:
+				text: 'Nombre de Cuenta'
+				size_hint_x: .2
+			LabelOscuro:
+				text: 'Productos Vendidos'
+				size_hint_x: .2
+			LabelOscuro:
+				text: 'Total'
+				size_hint_x: .15
+			LabelOscuro:
+				text: 'Hora'
+				size_hint_x: .2
+			LabelOscuro:
+				text: 'Fecha'
+				size_hint_x: .2
+		InventariosYClientesRV:
+			id: Ventas_RV
+			viewclass: 'SelectableVentaLabel'
+		BoxLayout:
+			size_hint_y: .07
+			spacing: .5
+			padding: .5
+			LabelOscuro:
+				text: 'Fecha específica:'
+			TextInput:
+				id: single_date
+				multiline: False
+				hint_text: 'dd/mm/aa'
+				write_tab: False
+				on_text_validate: root.cargar_venta('Date')
+			LabelOscuro:
+				text: 'Rango de fechas:'
+			TextInput:
+				id: initial_date
+				multiline: False
+				hint_text: 'dd/mm/aa'
+				write_tab: False
+				on_text_validate: root.cargar_venta('Range')
+			LabelOscuro:
+				text: '-'
+				size_hint_x: .06
+			TextInput:
+				id: last_date
+				multiline: False
+				hint_text: 'dd/mm/aa'
+				write_tab: False
+				on_text_validate: root.cargar_venta('Range')
+			BotonOscuro:
+				text: 'Hoy'
+				on_release: root.cargar_venta('Default')
+			BotonOscuro:
+				text: 'Mas Info'
+				on_release: root.mas_info()
+			BotonOscuro:
+				text: 'Guardar en CSV'
+				on_release: root.crear_csv()
+
+<CustomDropDown>:
+	canvas.before:
+		Color:
+			rgba: hex('#393939')
+		Rectangle:
+			size: self.size
+			pos: self.pos
+    Button:
+        text: 'Productos'
+        size_hint_y: None
+        height: 44
+        on_release: root.vista(self.text)
+    Button:
+        text: 'Usuarios'
+        size_hint_y: None
+        height: 44
+        on_release: root.vista(self.text)
+    Button:
+        text: 'Ventas'
+        size_hint_y: None
+        height: 44
+        on_release: root.vista(self.text)
+
 <InventariosYClientesWindow>:
     id: main_win
     orientation: 'vertical'
@@ -277,3 +543,5 @@
                 id: Vista_Productos
             VistaClientes:
                 id: Vista_Clientes
+            VistaVentas:
+                id: Vista_Ventas

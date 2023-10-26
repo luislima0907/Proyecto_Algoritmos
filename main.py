@@ -31,11 +31,12 @@ from inventarios_y_clientes.inventarios_y_clientes import InventariosYClientesWi
 from ventas.ventas import VentasWindow
 
 class MainWindow(BoxLayout):
+    QueriesSQLite.crear_tablas()
     def __init__(self, **kwargs):
         super().__init__(*kwargs)
-        self.ventas_widget = VentasWindow()
-        self.inicio_widget = InicioWindow()
         self.inventarios_y_clientes_widget = InventariosYClientesWindow()
+        self.ventas_widget = VentasWindow(self.inventarios_y_clientes_widget.actualizar_productos)
+        self.inicio_widget = InicioWindow()
         self.ids.Scrn_Inicio.add_widget(self.inicio_widget)
         self.ids.Scrn_Ventas.add_widget(self.ventas_widget)
         self.ids.Scrn_Inventarios_Y_Clientes.add_widget(self.inventarios_y_clientes_widget)

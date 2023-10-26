@@ -31,11 +31,110 @@ class QueriesSQLite:
         except Error as e:
             print(f"The error '{e}' occurred")
 
+    def execute_query(connection, query, data_tuple):
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query, data_tuple)
+            connection.commit()
+            print("Query executed successfully")
+            return cursor.lastrowid
+        except Error as e:
+            print(f"The error '{e}' occurred")
+
+    # added data_tuple
+    def execute_read_query(connection, query, data_tuple=()):
+        cursor = connection.cursor()
+        result = None
+        try:
+            cursor.execute(query, data_tuple)
+            result = cursor.fetchall()
+            return result
+        except Error as e:
+            print(f"The error '{e}' occurred")
+
+    # esto es nuevo
+    def crear_tablas():
+        connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
+
+        tabla_productos = """
+        CREATE TABLE IF NOT EXISTS Productos(
+         Codigo TEXT PRIMARY KEY, 
+         Nombre TEXT NOT NULL, 
+         Precio REAL NOT NULL, 
+         Cantidad INTEGER NOT NULL,
+         Proveedor TEXT NOT NULL
+        );
+        """
+
+        tabla_clientes = """
+        CREATE TABLE IF NOT EXISTS Clientes(
+         Codigo TEXT PRIMARY KEY, 
+         Nombre TEXT NOT NULL, 
+         Direccion TEXT NOT NULL,
+         Tipo TEXT NOT NULL
+        );
+        """
+
+        tabla_ventas = """
+        CREATE TABLE IF NOT EXISTS Ventas(
+         Codigo_del_cliente TEXT PRIMARY KEY, 
+         Codigo_del_producto TEXT NOT NULL,
+         Precio REAL NOT NULL,
+         Cantidad INTEGER NOT NULL, 
+         Total REAL NOT NULL,
+         Fecha TIMESTAMP,
+         FOREIGN KEY(Codigo_del_producto) REFERENCES Clientes(Codigo)
+        );
+        """
+
+        tabla_ventas_detalle = """
+        CREATE TABLE IF NOT EXISTS Ventas_Detalle(
+         Codigo_del_cliente INTEGER PRIMARY KEY, 
+         Codigo_del_producto TEXT NOT NULL, 
+         Precio REAL NOT NULL,
+         Producto TEXT NOT NULL,
+         Cantidad INTEGER NOT NULL,
+         FOREIGN KEY(Codigo_del_producto) REFERENCES Ventas(Codigo_del_cliente),
+         FOREIGN KEY(Producto) REFERENCES Productos(Codigo)
+        );
+        """
+
+        QueriesSQLite.execute_query(connection, tabla_productos, tuple()) 
+        QueriesSQLite.execute_query(connection, tabla_clientes, tuple()) 
+        QueriesSQLite.execute_query(connection, tabla_ventas, tuple()) 
+        QueriesSQLite.execute_query(connection, tabla_ventas_detalle, tuple()) 
+
 
 
 if __name__=="__main__":
+    from datetime import datetime, timedelta
     connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
-    
+
+    fecha = datetime.today()-timedelta(days=5)
+    nueva_data = (fecha, 4)
+    actualizar = """
+    UPDATE
+        Ventas
+    SET
+        Fecha = ?
+    WHERE
+        Codigo_del_cliente = ?
+    """
+    QueriesSQLite.execute_query(connection, actualizar, nueva_data)
+    select_ventas = "SELECT * from Ventas"
+    ventas = QueriesSQLite.execute_read_query(connection, select_ventas)
+    if ventas:
+        for venta in ventas:
+            print("type:", type(venta), "venta:",venta)
+
+
+    select_ventas_detalle = "SELECT * from Ventas_Detalle"
+    ventas_detalle = QueriesSQLite.execute_read_query(connection, select_ventas_detalle)
+    if ventas_detalle:
+        for venta in ventas_detalle:
+            print("type:", type(venta), "venta:",venta)
+
+   
     # crear_tabla_de_venta = """
     # CREATE TABLE IF NOT EXISTS ventas(
     #  Codigo_del_cliente TEXT PRIMARY KEY, 

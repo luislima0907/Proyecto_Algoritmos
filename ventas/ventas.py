@@ -10,12 +10,21 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 from datetime import datetime, timedelta
+import sqlite3
 from kivy.lang import Builder
 
 Builder.load_file('ventas/ventas.kv')
 
 from datetime import datetime, timedelta
 from sqlqueries import QueriesSQLite
+
+con = sqlite3.connect("Sistema_Transaccional_de_Ventas_DB.sqlite")
+cur = con.cursor()
+
+for row in cur.execute('SELECT Codigo FROM clientes'):
+    print(row)
+    
+con.close()
 
 inventario = [
     {'Codigo_del_cliente': 'G11', 'Codigo_del_producto': '111', 'Precio': 20.0, 'Cantidad': 20, 'Total': 400.00},
@@ -234,10 +243,12 @@ class NuevaCompraPopup(Popup):
 
 
 class VentasWindow(BoxLayout):
-    def __init__(self, **kwargs):
+    Cliente= None
+    def __init__(self, actualizar_productos_callback, **kwargs):
         super().__init__(*kwargs)
         self.Total = 0.0
         self.ids.RVS.modificar_cantidad_del_producto = self.modificar_cantidad_del_producto
+        self.actualizar_productos = actualizar_productos_callback
         
         self.Ahora = datetime.now()
         self.ids.Fecha.text = self.Ahora.strftime("%d/%m/%y")
@@ -263,7 +274,7 @@ class VentasWindow(BoxLayout):
                 self.agregar_venta(articulo)
                 self.ids.Buscar_Codigo_Del_Cliente.text = ''
                 break
-       
+              
     def agregar_venta_codigo_cliente(self, codigo):
         connection = QueriesSQLite.create_connection('Sistema_Transaccional_de_Ventas_DB.sqlite')
         inventario_sql = QueriesSQLite.execute_read_query(connection, "SELECT * from ventas")
@@ -323,17 +334,24 @@ class VentasWindow(BoxLayout):
         UPDATE
             ventas
         SET
-            Cantidad=?, Total=?
+            Cantidad=?, Total = ?
         WHERE
             Codigo_del_cliente=?
         """
-        #nueva_cantidad = []
+        venta = """INSERT INTO Ventas (Codigo_del_cliente, Total, Fecha) VALUES (?, ?, ?)"""
+        venta_tuple_2 = (self.Total, self.Ahora, self.Cliente['Codigo_del_cliente'])
+        venta_id = QueriesSQLite.execute_query(connection, venta_tuple_2)
+        venta_detalle = """INSERT INTO Ventas_Detalle(Codigo_del_producto, Precio, Producto, Cantidad) VALUES (?,?,?,?)"""
+        #actualizar_inventario = []
         for venta in self.ids.RVS.data:
             nueva_cantidad = 0
+            nuevo_total = 0
             if venta['Cantidad']-venta['cantidad_carrito']>0:
                 nueva_cantidad = venta['Cantidad'] - venta['cantidad_carrito']
                 nuevo_total = nueva_cantidad * venta['Precio']
             venta_tuple = (nueva_cantidad, nuevo_total, venta['Codigo_del_cliente'])
+            ventas_detalle_tuple = (venta_id, venta['Precio'], venta['Codigo'], venta['cantidad_carrito'])
+            QueriesSQLite.execute_query(connection, venta_detalle, ventas_detalle_tuple,)
             QueriesSQLite.execute_query(connection, actualizar, venta_tuple)
 
                         
@@ -355,11 +373,11 @@ class VentasWindow(BoxLayout):
         
     def inventarios_y_clientes(self):
         self.parent.parent.current = 'Scrn_Inventarios_Y_Clientes'
-        # connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
-        # seleccionar_ventas = "SELECT * from ventas"
-        # ventas = QueriesSQLite.execute_read_query(connection, seleccionar_ventas)
-        # for venta in ventas:
-        #     print(venta)
+        connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
+        seleccionar_ventas = "SELECT * from ventas"
+        ventas = QueriesSQLite.execute_read_query(connection, seleccionar_ventas)
+        for venta in ventas:
+            print(venta)
 
     def inicio(self):
         if self.ids.RVS.data:
