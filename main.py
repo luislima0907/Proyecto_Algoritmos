@@ -3,47 +3,48 @@ from kivy.uix.boxlayout import BoxLayout
 
 from sqlqueries import QueriesSQLite
 
-# if __name__ == "__main__":
+# if __name__=="__main__":
 #     connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
-    
-#     seleccionar_ventas = "SELECT * from ventas"
-#     ventas = QueriesSQLite.execute_read_query(connection, seleccionar_ventas)
-#     for venta in ventas:
-#         print(venta)
-        
-#     venta_dict = {'Codigo_del_cliente': 'R99','Codigo_del_producto': '999','Precio': 60.0,'Cantidad': 10,'Total': 600.00}
-#     venta_tuple = tuple(venta_dict.values())
-#     crear_venta = """
-#     INSERT INTO
-#         ventas (Codigo_del_cliente, Codigo_del_producto, Precio, Cantidad, Total)
-#     VALUES
-#         (?,?,?,?,?);
-#     """
-#     QueriesSQLite.execute_query(connection, crear_venta, venta_tuple)
-    
-#     seleccionar_ventas = "SELECT * from ventas"
-#     ventas = QueriesSQLite.execute_read_query(connection, seleccionar_ventas)
-#     for venta in ventas:
-#         print(venta)
 
-from inicio.inicio import InicioWindow
-from inventarios_y_clientes.inventarios_y_clientes import InventariosYClientesWindow
+# 	select_products = "SELECT * from productos"
+# 	productos = QueriesSQLite.execute_read_query(connection, select_products)
+# 	for producto in productos:
+# 		print(producto)
+    
+# 	producto_dict = {'codigo': '999', 'nombre': 'refresco 600ml', 'precio': 15.0, 'cantidad': 10}
+# 	producto_tuple = tuple(producto_dict.values())
+# 	crear_producto = """
+# 	INSERT INTO
+# 		productos (codigo, nombre, precio, cantidad)
+# 	VALUES
+# 		(?,?,?,?);
+# 	"""
+# 	QueriesSQLite.execute_query(connection, crear_producto, producto_tuple)
+
+# 	select_products = "SELECT * from productos"
+# 	productos = QueriesSQLite.execute_read_query(connection, select_products)
+# 	for producto in productos:
+# 		print(producto)
+
+from signin.signin import SigninWindow
+from admin.admin import AdminWindow
 from ventas.ventas import VentasWindow
 
+# agregado queriessqlite.create_tables()
 class MainWindow(BoxLayout):
-    QueriesSQLite.crear_tablas()
-    def __init__(self, **kwargs):
-        super().__init__(*kwargs)
-        self.inventarios_y_clientes_widget = InventariosYClientesWindow()
-        self.ventas_widget = VentasWindow(self.inventarios_y_clientes_widget.actualizar_productos)
-        self.inicio_widget = InicioWindow()
-        self.ids.Scrn_Inicio.add_widget(self.inicio_widget)
-        self.ids.Scrn_Ventas.add_widget(self.ventas_widget)
-        self.ids.Scrn_Inventarios_Y_Clientes.add_widget(self.inventarios_y_clientes_widget)
-        
+	QueriesSQLite.create_tables()
+	def __init__(self, **kwargs):
+		super().__init__(*kwargs)
+		self.admin_widget=AdminWindow()
+		self.ventas_widget=VentasWindow(self.admin_widget.actualizar_productos)
+		self.signin_widget=SigninWindow(self.ventas_widget.poner_usuario)
+		self.ids.scrn_signin.add_widget(self.signin_widget)
+		self.ids.scrn_ventas.add_widget(self.ventas_widget)
+		self.ids.scrn_admin.add_widget(self.admin_widget)
+
 class MainApp(App):
-    def build(self):
-        return MainWindow()
-    
-if __name__ == "__main__":
-    MainApp().run()
+	def build(self):
+		return MainWindow()
+
+if __name__=="__main__":
+	MainApp().run()

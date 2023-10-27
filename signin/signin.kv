@@ -1,10 +1,10 @@
 #:import hex kivy.utils.get_color_from_hex
 
-<InicioWindow>:
+<SigninWindow>:
 	orientation: 'vertical'
 	canvas.before:
 		Color:
-			rgba: hex('#159F9A')
+			rgba: hex('#000000')
 		Rectangle:
 			size: self.size
 			pos: self.pos
@@ -13,7 +13,7 @@
 	BoxLayout:
 		canvas.before:
 			Color:
-				rgba: hex('#F2F2F2')
+				rgba: hex('#4D6E78')
 			Rectangle:
 				size: self.size
 				pos: self.pos
@@ -24,36 +24,41 @@
 			size_hint_x: .4
 			orientation: 'vertical'
 			Label: 
-				size_hint_y: .15
-				text: 'Bienvenido'
-				color: (0,0,0,1)
+				size_hint_y: .40
+				text: 'Bienvenido a la Base de Datos\nDe Tienda Rosita'
+				halign: 'center'
+				font_size: '40sp'
+				color: hex('#FFFFFF')
 			Label:
-				id: Inicio_Notificacion
+				id: signin_notificacion
 				size_hint_y: .15
 				color: (1, .2, .2, 1)
 			TextInput:
-				id: Codigo
+				id: username
 				size_hint_y: .1
-				hint_text: 'Ingrese el codigo del cliente'
+				hint_text: 'Nombre de Usuario'
 				multiline: False
 				write_tab: False
-				on_text_validate: root.verificar_cliente(self.text, Nombre.text)
+				on_text_validate: root.verificar_usuario(self.text, password.text)
 			TextInput:
-				id: Nombre
+				id: password
 				size_hint_y: .1
-				hint_text: 'Nombre del cliente'
+				hint_text: 'Contraseña'
 				multiline: False
 				write_tab: False
-				on_text_validate: root.verificar_cliente(Codigo.text, self.text)
+				password: True
+				on_text_validate: root.verificar_usuario(username.text, self.text)
 			Button:
 				size_hint_y: .1
 				background_normal: ''
 				background_color: hex('#393939')
 				text: 'Ingresar'
-				on_release: root.verificar_cliente(Codigo.text, Nombre.text)
+				on_release: root.verificar_usuario(username.text, password.text)
 			Label:
 				size_hint_y: .4
 		Label:
 			size_hint_x: .3
 	BoxLayout:
 		size_hint_y: .05
+
+
