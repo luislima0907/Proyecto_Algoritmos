@@ -1,4 +1,5 @@
 nombre,codigo,cantidad,precio,precio_total
 cereal 500g,222,8,25.0,200.0
-yogurt 1L,333,12,25.0,300.0
-,,,,500.0
+yogurt 1l,333,12,25.0,300.0
+alimento para perro 20kg,555,4,750.0,3000.0
+,,,,3500.0
