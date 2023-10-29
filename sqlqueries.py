@@ -1,3 +1,5 @@
+# En este archivo generamos las consultas básicas para conectarnos a la base de datos y crear sus respectivas tablas
+
 import sqlite3
 from sqlite3 import Error
 
@@ -12,7 +14,6 @@ class QueriesSQLite:
 
         return connection
 
-    # added return
     def execute_query(connection, query, data_tuple):
         cursor = connection.cursor()
         try:
@@ -23,7 +24,6 @@ class QueriesSQLite:
         except Error as e:
             print(f"The error '{e}' occurred")
 
-    # added data_tuple
     def execute_read_query(connection, query, data_tuple=()):
         cursor = connection.cursor()
         result = None

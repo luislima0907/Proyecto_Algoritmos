@@ -1,0 +1,4 @@
+nombre,codigo,cantidad,precio,precio_total
+cereal 500g,222,8,25.0,200.0
+yogurt 1L,333,12,25.0,300.0
+,,,,500.0

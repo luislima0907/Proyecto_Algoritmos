@@ -3,6 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from sqlqueries import QueriesSQLite
 
+#Esto nos sirvió para insertar los productos por medio de sql lite
 # if __name__=="__main__":
 #     connection = QueriesSQLite.create_connection("Sistema_Transaccional_de_Ventas_DB.sqlite")
 
@@ -30,7 +31,6 @@ from signin.signin import SigninWindow
 from admin.admin import AdminWindow
 from ventas.ventas import VentasWindow
 
-# agregado queriessqlite.create_tables()
 class MainWindow(BoxLayout):
 	QueriesSQLite.create_tables()
 	def __init__(self, **kwargs):

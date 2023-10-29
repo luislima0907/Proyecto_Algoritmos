@@ -15,6 +15,7 @@ Builder.load_file('ventas/ventas.kv')
 from datetime import datetime, timedelta
 from sqlqueries import QueriesSQLite
 
+#Este es un diccionario de prueba mientras se estaban estableciendo las funciones principales junto la interfaz, antes de crear la base de datos con sql lite
 inventario=[
 	{'codigo': '111', 'nombre': 'leche 1L', 'precio': 20.0, 'cantidad': 20},
 	{'codigo': '222', 'nombre': 'cereal 500g', 'precio': 50.5, 'cantidad': 15}, 

@@ -575,8 +575,8 @@ class AdminWindow(BoxLayout):
 		super().__init__(**kwargs)
 		self.vista_actual='Productos'
 		self.vista_manager=self.ids.vista_manager
-		self.dropdown = CustomDropDown(self.cambiar_vista)				# nuevo
-		self.ids.cambiar_vista.bind(on_release=self.dropdown.open)		# nuevo
+		self.dropdown = CustomDropDown(self.cambiar_vista)
+		self.ids.cambiar_vista.bind(on_release=self.dropdown.open)
 		
 		
 	def cambiar_vista(self, cambio=False, vista=None):
